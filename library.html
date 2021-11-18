@@ -76,8 +76,9 @@
 </svg>`
 
                 return {
-                    height: height,
-                    width: width,
+                    // FIXME: when the width and height are provided the preview renders at a weird position in relation to the cursor
+                    // height: height,
+                    // width: width,
                     url: `data:image/svg+xml,${encodeURI(svg)}`,
                 }
             },
