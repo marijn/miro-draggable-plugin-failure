@@ -84,6 +84,10 @@
             onDrop: (canvasX, canvasY, targetElement) => {
                 console.log(`Dropping ${targetElement.innerText}`);
             },
+
+            onClick: (targetElement) => {
+                console.log(`Clicked ${targetElement.innerText}`);
+            },
         }
 
         const elementsView = document.getElementById('elements');
