@@ -76,7 +76,8 @@
 </svg>`
 
                 return {
-                    // Attention: returning the width and height will make Miro behave weird
+                    height: height,
+                    width: width,
                     url: `data:image/svg+xml,${encodeURI(svg)}`,
                 }
             },
