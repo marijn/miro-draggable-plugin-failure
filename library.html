@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <script src="https://miro.com/app/static/sdk.1.1.js"></script>
-    <link rel="stylesheet" href="https://miro.com/app/static/styles.1.0.css"/>
+    <script src="https://miro.com/app/static/sdk/v2/miro.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/mirotone/dist/styles.css"/>
     <style>
         html,
         body {
@@ -36,65 +36,29 @@
 
 <body>
 <ul id="elements">
-    <li class="canvasElement">
+    <li class="canvasElement miro-draggable">
         Please drag me (A)
     </li>
-    <li class="canvasElement">
+    <li class="canvasElement miro-draggable">
         Please drag me (B)
     </li>
-    <li class="canvasElement">
+    <li class="canvasElement miro-draggable">
         Please drag me (C)
     </li>
 </ul>
 </body>
 
 <script>
-    miro.onReady(() => {
+    async function init() {
+        await miro.board.ui.on('drop', async ({x, y, target}) => {
+            await miro.board.createStickyNote({
+                x,
+                y,
+                content: target.textContent,
+            });
+        });
+    }
 
-        const draggableViewOptions = {
-            draggableItemSelector: '.canvasElement',
-
-            getDraggableItemPreview: (targetElement) => {
-                const currentShapeColor = window.getComputedStyle(targetElement).backgroundColor;
-                const elementName = targetElement.innerText
-
-                const width = window.getComputedStyle(targetElement).width;
-                const height = window.getComputedStyle(targetElement).height;
-                const font = window.getComputedStyle(targetElement).fontFamily;
-
-                console.log(elementName);
-                console.log(width);
-                console.log(height);
-                console.log(font);
-
-                // FIXME: Preview does not render contained text
-                const svg = `<svg height='${height}' width='${width}' xmlns='http://www.w3.org/2000/svg'>
-    <g>
-        <rect stroke='null' x='0' y='0' fill='${currentShapeColor}' height='${height}' width='${width}'></rect>
-        <text x='50%' y='50%' fill='black' dominant-baseline='middle' text-anchor='middle' style='font-family: ${font}; font-size: 0.5em;'>Testing${elementName}</text>
-    </g>
-</svg>`
-
-                return {
-                    // FIXME: when the width and height are provided the preview renders at a weird position in relation to the cursor
-                    // height: height,
-                    // width: width,
-                    url: `data:image/svg+xml,${encodeURI(svg)}`,
-                }
-            },
-
-            onDrop: (canvasX, canvasY, targetElement) => {
-                console.log(`Dropping ${targetElement.innerText}`);
-            },
-
-            onClick: (targetElement) => {
-                console.log(`Clicked ${targetElement.innerText}`);
-            },
-        }
-
-        const elementsView = document.getElementById('elements');
-
-        miro.board.ui.initDraggableItemsContainer(elementsView, draggableViewOptions);
-    })
+    init();
 </script>
 </html>
